@@ -1,13 +1,14 @@
 class Semaforo {
   constructor() {
     this.color = "rojo";
+    this.isTrafico = false; // Variable para indicar si hay tráfico o no
   }
 
   cambiarColor() {
     if (this.color === "rojo") {
       this.color = "verde";
     } else {
-      this.color = "rojo";
+      this.color = "rojo"; // No hay tráfico cuando el semáforo está en rojo
     }
   }
 }
@@ -55,11 +56,20 @@ class Calle {
     }, 5000); // Generar auto cada 5 segundos
 
     setInterval(() => {
+      if (this.autos.filter(auto => auto.estado === "detenido").length > 5) {
+        this.semaforo.isTrafico = true;
+        setTimeout(() => {
+          this.semaforo.isTrafico = false;
+        }, 60000); // Duración del semáforo verde: 1 minuto
+      }
+    }, 1000); // Verificar el tráfico cada segundo
+
+    setInterval(() => {
       this.semaforo.cambiarColor();
     }, 10000); // Cambiar el semáforo cada 10 segundos
 
     setInterval(() => {
-      if (this.semaforo.color === "verde") {
+      if (this.semaforo.color === "verde" && !this.semaforo.isTrafico) {
         this.autos.forEach((auto) => {
           auto.avanzar();
         });
