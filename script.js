@@ -132,7 +132,9 @@ class Calle {
       if (tiempoEsperaTotal >= 60) {
         const minutos = Math.floor(tiempoEsperaTotal / 60);
         const segundos = tiempoEsperaTotal % 60;
-        tiempoEsperaTotalFormatted = `${minutos} minutos ${segundos.toFixed(2)} segundos`;
+        tiempoEsperaTotalFormatted = `${minutos} minutos ${segundos.toFixed(
+          2
+        )} segundos`;
       } else {
         tiempoEsperaTotalFormatted = `${tiempoEsperaTotal} segundos`;
       }
@@ -163,7 +165,7 @@ function draw() {
 
   // Dibujar el semáforo
   ctx.fillStyle = "black";
-  ctx.fillRect(400, 0, 50, 200);
+  ctx.fillRect(400, 0, 50, 100);
   if (calle.semaforo.color === "verde") {
     ctx.fillStyle = "green";
   } else {
