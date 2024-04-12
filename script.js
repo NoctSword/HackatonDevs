@@ -57,13 +57,16 @@ class Auto {
 class Calle {
   constructor() {
     this.semaforo = new Semaforo();
+    this.semaforo2 = new Semaforo();
+    this.semaforo3 = new Semaforo(); 
+    this.semaforo4 = new Semaforo(); 
     this.autos = [];
     this.autoGenerado = false; // Indica si ya se generó un auto en esta iteración
   }
 
   generarAuto() {
     if (!this.autoGenerado) {
-      const y = 200; // Altura fija del carril
+      const y = 230; // Altura fija del carril
       const x = -50; // Posición inicial del auto fuera del lienzo
       const auto = new Auto(1, x, y);
       this.autos.push(auto);
@@ -90,6 +93,18 @@ class Calle {
     setInterval(() => {
       this.semaforo.cambiarColor();
     }, 10000); // Cambiar el semáforo cada 10 segundos
+    setInterval(() => {
+      this.semaforo2.cambiarColor();
+    }, 7000); // Cambiar el semáforo2 cada 7 segundos
+
+    setInterval(() => {
+      this.semaforo3.cambiarColor();
+    }, 8000); // Cambiar el semáforo3 cada 8 segundos
+
+    setInterval(() => {
+      this.semaforo4.cambiarColor();
+    }, 5000); // Cambiar el semáforo3 cada 8 segundos
+
 
     setInterval(() => {
       document.getElementById("tblEstadisticas").innerText = "";
@@ -100,11 +115,11 @@ class Calle {
         autosEspera = 0;
       } else {
         this.autos.forEach((auto) => {
-          if (auto.x < 320) {
+          if (auto.x < 180) {
             // Si el auto está antes del semáforo
             auto.avanzar(this.autos.filter((a) => a !== auto)); // Pasar todos los autos menos el actual
             autosEspera = this.autos.length - autosPasaron;
-          } else if (auto.x >= 400) {
+          } else if (auto.x >= 200) {
             auto.avanzar(this.autos.filter((a) => a !== auto)); // Pasar todos los autos menos el actual
             //autosPasaron++;
             if (auto.estado === "paso" && !auto.contado) {
@@ -165,15 +180,72 @@ function draw() {
 
   // Dibujar el semáforo
   ctx.fillStyle = "black";
-  ctx.fillRect(400, 0, 50, 100);
+  ctx.fillRect(400, 0, 50, 200);
   if (calle.semaforo.color === "verde") {
     ctx.fillStyle = "green";
   } else {
     ctx.fillStyle = "red";
   }
   ctx.beginPath();
-  ctx.arc(425, 50, 20, 0, Math.PI * 2);
+  ctx.arc(415, 295, 10, 0, Math.PI * 2);
   ctx.fill();
+
+  // Dibujar la línea peatonal vertical del semáforo1
+  ctx.fillStyle = 'yellow';
+   ctx.fillRect(235, 190, 10, 75);
+
+  ctx.fillStyle = 'black';
+  ctx.fillRect(250, 280, 30, 100);
+  if (calle.semaforo2.color === 'verde') {
+    ctx.fillStyle = 'green';
+  } else {
+    ctx.fillStyle = 'red';
+  }
+  ctx.beginPath();
+  ctx.arc(265, 295, 10, 0, Math.PI * 2);
+  ctx.fill();
+
+   // Dibujar la línea peatonal vertical del semáforo2
+   ctx.fillStyle = 'yellow';
+   ctx.fillRect(300, 140, 75, 10);
+ 
+
+  ctx.fillStyle = 'black';
+  ctx.fillRect(250, 60, 30, 100);
+  if (calle.semaforo3.color === 'verde') {
+    ctx.fillStyle = 'green';
+  } else {
+    ctx.fillStyle = 'red';
+  }
+  ctx.beginPath();
+  ctx.arc(265, 75, 10, 0, Math.PI * 2);
+  ctx.fill();
+
+
+  // Dibujar la línea peatonal vertical del semáforo3
+  
+  ctx.fillStyle = 'yellow';
+  ctx.fillRect(440, 190, 10, 75);
+
+  
+  // Dibujar el semáforo4
+  ctx.fillStyle = 'black';
+  ctx.fillRect(400, 60, 30, 100);
+  if (calle.semaforo3.color === 'verde') {
+    ctx.fillStyle = 'green';
+  } else {
+    ctx.fillStyle = 'red';
+  }
+  ctx.beginPath();
+  ctx.arc(415, 75, 10, 0, Math.PI * 2);
+  ctx.fill();
+
+  
+  // Dibujar la línea peatonal vertical del semáforo4
+  ctx.fillStyle = 'Yellow';
+  ctx.fillRect(300, 290, 75, 10);
+
+
 
   // Dibujar los autos
   calle.autos.forEach((auto) => {
