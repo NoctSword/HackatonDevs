@@ -21,9 +21,16 @@ class Semaforo {
       this.estado = 'detenido';
     }
   
-    avanzar() {
-      this.estado = 'avanzando';
-      this.x += this.velocidad;
+    avanzar(otrosAutos) {
+      if (otrosAutos.some(auto => auto.x > this.x && auto.x - this.x < 75)) {
+        // Si hay autos delante, detenerse
+        this.estado = 'detenido';
+      } else {
+        // Si no hay autos delante, avanzar
+        this.estado = 'avanzando';
+        this.velocidad = Math.random() * 2 + 1; // Velocidad aleatoria entre 1 y 3
+        this.x += this.velocidad;
+      }
     }
   
     detener() {
@@ -45,14 +52,24 @@ class Semaforo {
         const auto = new Auto(1, x, y);
         this.autos.push(auto);
         this.autoGenerado = true;
+    
+        // Retraso aleatorio antes de generar el siguiente auto
+        setTimeout(() => {
+          this.autoGenerado = false;
+        }, Math.random() * 3000 + 2000); // Retraso entre 2 y 5 segundos
       }
     }
   
     simular() {
       setInterval(() => {
-        this.generarAuto();
-        this.autoGenerado = false;
-      }, 5000); // Generar auto cada 5 segundos
+        if (!this.autoGenerado) {
+          const randomTime = Math.floor(Math.random() * 5000) + 1000; // Generar un tiempo aleatorio entre 1 y 5 segundos
+          setTimeout(() => {
+            this.generarAuto();
+            this.autoGenerado = false;
+          }, randomTime);
+        }
+      }, 2000); // Verificar si se debe generar un auto cada 2 segundos
   
       setInterval(() => {
         this.semaforo.cambiarColor();
@@ -61,12 +78,14 @@ class Semaforo {
       setInterval(() => {
         if (this.semaforo.color === 'verde') {
           this.autos.forEach(auto => {
-            auto.avanzar();
+            auto.avanzar(this.autos.filter(a => a !== auto)); // Pasar todos los autos menos el actual
           });
         } else {
           this.autos.forEach(auto => {
-            if (auto.x < 700) { // Si el auto está antes del semáforo
-              auto.avanzar();
+            if (auto.x < 320) { // Si el auto está antes del semáforo
+              auto.avanzar(this.autos.filter(a => a !== auto)); // Pasar todos los autos menos el actual
+            } else if (auto.x >= 400) {
+              auto.avanzar(this.autos.filter(a => a !== auto)); // Pasar todos los autos menos el actual
             } else {
               auto.detener();
             }
@@ -89,14 +108,14 @@ class Semaforo {
   
     // Dibujar el semáforo
     ctx.fillStyle = 'black';
-    ctx.fillRect(700, 0, 50, 400);
+    ctx.fillRect(400, 0, 50, 200);
     if (calle.semaforo.color === 'verde') {
       ctx.fillStyle = 'green';
     } else {
       ctx.fillStyle = 'red';
     }
     ctx.beginPath();
-    ctx.arc(725, 50, 20, 0, Math.PI * 2);
+    ctx.arc(425, 50, 20, 0, Math.PI * 2);
     ctx.fill();
   
     // Dibujar los autos
@@ -107,4 +126,3 @@ class Semaforo {
   }
   
   setInterval(draw, 1000 / 60); // Redibujar la escena cada 60 veces por segundo
-  
