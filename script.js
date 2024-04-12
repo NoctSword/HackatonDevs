@@ -22,7 +22,7 @@ class Semaforo {
     }
   
     avanzar(otrosAutos) {
-      if (otrosAutos.some(auto => auto.x > this.x && auto.x - this.x < 75)) {
+      if (otrosAutos.some(auto => auto.x > this.x && auto.x - this.x < Math.floor(Math.random() * 51) + 75)) {
         // Si hay autos delante, detenerse
         this.estado = 'detenido';
       } else {
